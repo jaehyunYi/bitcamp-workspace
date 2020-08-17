@@ -10,15 +10,19 @@ public class MyArrayListTest4 {
 		list1.add("ccc");		// aaa bbb ccc
 		list1.add("ddd");		// aaa bbb ccc ddd
 		list1.add("eee");		// aaa bbb ccc ddd eee
-
+		list1.add("fff");
+		list1.add("ggg");
+		print(list1);
 
 		// fff, ggg, hhh, iii
 		ArrayList list2 = new ArrayList();
 		list2.add("fff");		// aaa bbb ccc ddd eee fff
 		list2.add("ggg");		// aaa bbb ccc ddd eee fff ggg
 		list2.add("hhh");		// aaa bbb ccc ddd eee fff ggg hhh
-		list2.add(8,"iii");
-		print(list1);
+		list2.add("iii");
+		list2.add("jjj");
+		list2.add("kkk");
+		list2.add("lll");
 		print(list2);
 	}
 

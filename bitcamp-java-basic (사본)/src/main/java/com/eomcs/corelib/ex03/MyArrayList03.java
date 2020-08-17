@@ -16,8 +16,6 @@ public class MyArrayList03 {
 		return true;
 	}
 
-
-
 	static public Object get(int index) {
 		return elementData[index];
 	}

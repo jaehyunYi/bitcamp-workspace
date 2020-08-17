@@ -13,7 +13,7 @@ public class Exam0152 {
 
 		@Override
 		public String toString() {
-			return"Mykey [ contents =" + contents + "]"
+			return"Mykey [ contents =" + contents + "]";
 		}
 
 		public static void main(String[] args) {
