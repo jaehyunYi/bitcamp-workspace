@@ -48,7 +48,8 @@ public class MyLinkedList05 {
 			throw new IndexOutOfBoundsException("인덱스가 유효하지 않습니다.");
 		}
 		Node cursor = first;
-		for (int i = 1; i < index; i++) {
+
+		for (int i = 1; i <= index; i++) {
 			cursor = cursor.next;
 		}
 		return cursor.value;

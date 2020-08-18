@@ -8,7 +8,7 @@ package com.eomcs.algorithm.data_structure.linkedlist;
 // 5) 목록에서 값을 조회하는 get() 메서드를 정의한다.
 // 6) 목록에서 특저 인덱스 위치에 값을 삽입하는 add(int, Object)메서드를 정의한다.
 //	- Node에 생성자를 추가한다.
-// 7) 목록에서 특정 인덱스에 갑승ㄹ 제거하는 remove(int)메서드를 정의한다.
+// 7) 목록에서 특정 인덱스에 값을 제거하는 remove(int)메서드를 정의한다.
 
 public class MyLinkedList07 {
 
@@ -106,7 +106,7 @@ public class MyLinkedList07 {
 		}
 
 		Node cursor = first;
-		for (int i = 1; i < index; i++) {
+		for (int i = 1; i <= index - 1; i++) {
 			cursor = cursor.next;
 		}
 
