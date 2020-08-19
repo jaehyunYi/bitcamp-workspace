@@ -1,224 +1,75 @@
-# 10 - 다른 클래스와 관계 맺기 : 의존 관계
+# 14 - 인스턴스 연산자와 메서드, 그리고 setter 와 getter
 
-소스 코드 관리를 위해 메서드를 여러 클래스로 분리하게 되면 
-반드시 클래스 간에 **의존 관계(dependency relationship)**를 형성하게 된다.
-즉, 메서드를 사용하는 클래스(client)와 메서드를 제공하는 클래스(supplier)가 생겨난다.
-예를 들면, `App` 클래스에서 `MemberHandler` 클래스로 회원 데이터 처리와 관련된 메서드를 분리하는 순간
-`App` 클래스와 `MemberHandler` 클래스는 의존 관계를 맺게 된다.
-`App`은 회원 데이터를 처리하기 위해 `MemberHandler`의 메서드를 사용하는 클라이언트 입장이 되고,
-`MemberHandler`는 `App`에게 필요 메서드를 공급하는 공급자 입장이 된다.
+**인스턴스 메서드**는 인스턴스의 필드를 다루는 일을 한다.
+즉 인스턴스 값을 다루는 연산자(operator) 역할을 수행한다.
+그래서 ODA/D(Object-Oriented Analysis/Design)에서는 메서드를 오퍼레이터라고 부른다.
 
-이번 훈련에서는 *클래스 간의 의존 관계*를 연습할 것이다.
-겸사겸사하여 조건문과 반복문의 사용법도 연습해 보자.
+이번 훈련에서는 인스턴스 메서드를 **연산자**관점에서 바라보고 이해해보자.
+인스턴스 필드의 값을 외부에서 직접 접근하지 못하게 막고,
+대신 세터(setter)/게터(getter) 메서드를 통해 값을 조회하고 변경하자.
 
 ## 훈련 목표
 
-- 클래스 간의 의존 관계가 무엇인지 이해한다.
-- 의존 관계에서 클라이언트 역할과 공급자 역할을 이해한다.
-- 조건문, 반복문 등 기본 문법을 활용하여 명령의 흐름을 제어하는 것을 연습한다.
+- 변수와 연산자 관점에서 인스턴스와 메서드를 이해한다.
+- 메서드를 활용하여 인스턴스 값을 다루는 연산자를 정의한다.
+- 캡슐화의 의미를 이해하고, 셋터/겟터를 만든다.
 
-## 훈련 내용
+## 훈련 내용 
 
-- 프로젝트 생성자와 팀원을 등록할 때 회원 정보를 조회하여 등록한다.
-- 작업 담당자를 등록할 때 회원 정보를 조회하여 등록한다.
+- 게시글, 회원 정보, 프로젝트 정보, 작업 정보를 다룰 때 세터/게터를 정의한다.
+- 세터/게터를 사용하여 인스턴스 필드 값을 조회하고 변경한다. 
+
 
 ## 실습
 
-### 1단계 - 프로젝트 정보를 등록할 때 만든이 이름을 회원 정보에서 조회한다.
+### 1단계 - MemberHandler의 인스턴스 필드를 비공개로 전환한다.
 
-다음과 같이 *만든이*의 이름이 유효할 경우에는 다음 입력으로 넘어간다.
+- MemberHandler를 의존 객체로 사용하는 클래스(ProjectHandler/TaskHandler)에서
+  MemberHandler의 필드 값을 임의로 조작할 수 없도록 필드를 비공개(private)로 전환한다.
+  
+#### 작업 파일
+- com.eomcs.pms.handler.MemberHandler
+   
+### 2단계 - Board 인스턴스 값을 다룰 연산자를 정의하라.
 
-```console
-명령> /project/add
-[프로젝트 등록]
-번호? 11
-프로젝트명? 미니 프로젝트 관리 시스템
-내용? 소규모 팀에서 사용하기 편한 프로젝트 관리 시스템
-시작일? 2020-1-1
-종료일? 2020-2-2
-만든이? hong
-팀원? 
-```
+- Board 클래스의 인스턴스 필드를 공개(default) 모드에서 
+  비공개(private) 모드로 전환한다.
+- 대신 세터/게터를 정의하여 필드 값을 다룰 수 있도록 한다.
 
-다음과 같이 *만든이*의 이름이 무효할 경우에는 오류를 알리고 다시 입력 받는다. 
+#### 작업 파일
 
-```console
-명령> /project/add
-[프로젝트 등록]
-번호? 11
-프로젝트명? 미니 프로젝트 관리 시스템
-내용? 소규모 팀에서 사용하기 편한 프로젝트 관리 시스템
-시작일? 2020-1-1
-종료일? 2020-2-2
-만든이? hong
-등록된 회원이 아닙니다.
-만든이? 
- 
-```
+- 
+- com.eomcs.pms.handelr.BoardHandler$Board 클래스 변경
+- com.eomcs.pms.handelr.BoardHandler 클래스 변경
 
-- `MemberHandler`에 이름으로 회원 정보를 찾는 findByName() 메서드를 추가한다.
-- `ProjectHandler.add()`에서 `MemberHandler.findByName()` 메서드를 사용하여 이름의 유효 여부를 검사한다. 
+- Lesson.java
+    - 인스턴스 변수(필드)를 비공개(private)로 전환한다.
+    - 값을 설정하고 리턴해주는 세터/게터를 정의한다.
+- LessonHandler.java
+    - Lesson 인스턴스에 값을 넣고 꺼낼 때 세터/겟터를 사용한다.
 
-#### 작업 파일 
+### 작업2) Member 인스턴스의 값을 다룰 연산자를 정의하라.
 
-- com.eomcs.pms.handler.MemberHandler 클래스 변경
-  - findByName(String) 메서드 추가
-- com.eomcs.pms.handler.ProjectHandler 클래스 변경
-  - add() 변경
-  - 백업: ProjectHandler_a.java
+- Member.java
+    - 인스턴스 변수(필드)를 비공개(private)로 전환한다.
+    - 값을 설정하고 리턴해주는 세터/게터를 정의한다.
+- MemberHandler.java
+    - Member 인스턴스에 값을 넣고 꺼낼 때 세터/겟터를 사용한다.
 
+### 작업3) Board 인스턴스의 값을 다룰 연산자를 정의하라.
 
-### 2단계 - 프로젝트의 *만든이* 이름을 입력하지 않으면 프로젝트 등록을 취소한다.
-
-다음과 같이 *만든이*의 이름을 입력하지 않고 엔터키를 치면 프로젝트 정보 등록을 취소한다.
-
-```console
-명령> /project/add
-[프로젝트 등록]
-번호? 11
-프로젝트명? 미니 프로젝트 관리 시스템
-내용? 소규모 팀에서 사용하기 편한 프로젝트 관리 시스템
-시작일? 2020-1-1
-종료일? 2020-2-2
-만든이?(취소: 빈 문자열)
-프로젝트 등록을 취소합니다.
-
-명령>
-```
-
-- *만든이*의 이름이 빈 문자열인지 여부를 검사하는 조건문을 추가한다.
-
-#### 작업 파일 
-
-- com.eomcs.pms.handler.ProjectHandler 클래스 변경
-  - add() 변경
-  - 백업: ProjectHandler_b.java
-
-
-### 3단계 - 프로젝트 팀원을 등록할 때 회원 정보에서 조회한다.
-
-다음과 같이 각각의 팀원 이름을 입력 받고, 등록된 회원이 아니면 오류를 알린다.
-팀원 등록을 완료하고 싶으면 빈 문자열을 입력한다.
-
-```console
-명령> /project/add
-[프로젝트 등록]
-번호? 11
-프로젝트명? 미니 프로젝트 관리 시스템
-내용? 소규모 팀에서 사용하기 편한 프로젝트 관리 시스템
-시작일? 2020-1-1
-종료일? 2020-2-2
-만든이?(취소: 빈 문자열) 홍길동
-팀원?(완료: 빈 문자열) 임꺽정
-팀원?(완료: 빈 문자열) 유관순
-팀원?(완료: 빈 문자열) 주윤발
-등록된 회원이 아닙니다.
-팀원?(완료: 빈 문자열)
-
-명령>
-```
-
-- *팀원*의 이름이 유효한 경우 팀원 이름을 추가한다.
-- *팀원*의 이름이 무효하면 오류를 알린다.
-- *팀원*의 이름이 빈 문자열이면 팀원 입력을 완료한다.
-
-#### 작업 파일 
-
-- com.eomcs.pms.handler.ProjectHandler 클래스 변경
-  - add() 변경
-  - 백업: ProjectHandler_c.java
-
-
-### 4단계 - 프로젝트 목록을 출력할 때 팀원 이름도 포함한다.
-
-다음과 같이 프로젝트의 *만든이* 항목 옆에 팀원의 이름을 출력한다.
-
-```console
-명령> /project/list
-[프로젝트 목록]
-11, 프로젝트1, 2020-01-01, 2020-02-02, hong, [kim,lee,park]
-12, 프로젝트2, 2020-01-15, 2020-02-15, leem, [lee,park]
-
-명령>
-```
-
-- `list()`에서 프로젝트 목록 출력할 때 팀원 항목을 추가한다.
-
-#### 작업 파일 
-
-- com.eomcs.pms.handler.ProjectHandler 클래스 변경
-  - list() 변경
-
- 
-### 5단계 - 작업 정보를 등록할 때 *담당자* 이름을 회원 정보에서 조회한다.
-
-다음과 같이 *담당자*의 이름이 유효할 경우에는 다음 입력으로 넘어간다.
-
-```console
-명령> /task/add
-[작업 등록]
-번호? 100
-내용? 작업입니다.
-마감일? 2020-2-2
-상태?
-0: 신규
-1: 진행중
-2: 완료
-> 2
-담당자?(취소: 빈 문자열) hong
-
-명령>
-```
-
-다음과 같이 *담당자*의 이름이 무효할 경우에는 오류를 알리고 다시 입력 받는다. 
-
-```console
-명령> /task/add
-[작업 등록]
-번호? 100
-내용? 작업입니다.
-마감일? 2020-2-2
-상태?
-0: 신규
-1: 진행중
-2: 완료
-> 2
-담당자?(취소: 빈 문자열) hong
-등록된 회원이 아닙니다.
-담당자?(취소: 빈 문자열) 
- 
-```
-
-
-다음과 같이 *담당자*의 이름이 빈 문자열일 경우에는 등록을 취소한다. 
-
-```console
-명령> /task/add
-[작업 등록]
-번호? 100
-내용? 작업입니다.
-마감일? 2020-2-2
-상태?
-0: 신규
-1: 진행중
-2: 완료
-> 2
-담당자?(취소: 빈 문자열)     <=== 입력 없이 엔터키 친다.
-작업 등록을 취소합니다.
-
-명령>
-```
-
-- `TaskHandler.add()`에서 `MemberHandler.findByName()` 메서드를 사용하여 이름의 유효 여부를 검사한다. 
-
-#### 작업 파일 
-
-- com.eomcs.pms.handler.TaskHandler 클래스 변경
-  - add() 변경
+- Board.java
+    - 인스턴스 변수(필드)를 비공개(private)로 전환한다.
+    - 값을 설정하고 리턴해주는 세터/게터를 정의한다.
+- BoardHandler.java
+    - Board 인스턴스에 값을 넣고 꺼낼 때 세터/겟터를 사용한다.
 
 
 ## 실습 결과
 
-- src/main/java/com/eomcs/pms/handler/MemberHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/ProjectHandler.java 변경
-- src/main/java/com/eomcs/pms/handler/TaskHandler.java 변경
+- src/main/java/com/eomcs/lms/domain/Lesson.java 변경
+- src/main/java/com/eomcs/lms/domain/Member.java 변경
+- src/main/java/com/eomcs/lms/domain/Board.java 변경
+- src/main/java/com/eomcs/lms/handler/LessonHandler.java 변경
+- src/main/java/com/eomcs/lms/handler/MemberHandler.java 변경
+- src/main/java/com/eomcs/lms/handler/BoardHandler.java 변경
