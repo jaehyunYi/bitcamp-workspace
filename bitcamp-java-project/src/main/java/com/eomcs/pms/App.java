@@ -1,76 +1,200 @@
 package com.eomcs.pms;
 
-import com.eomcs.pms.handler.BoardHandler;
-import com.eomcs.pms.handler.MemberHandler;
-import com.eomcs.pms.handler.ProjectHandler;
-import com.eomcs.pms.handler.TaskHandler;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+
+import com.eomcs.context.ApplicationContextListener;
+import com.eomcs.pms.domain.Board;
+import com.eomcs.pms.domain.Member;
+import com.eomcs.pms.domain.Project;
+import com.eomcs.pms.domain.Task;
+import com.eomcs.pms.handler.BoardAddCommand;
+import com.eomcs.pms.handler.BoardDeleteCommand;
+import com.eomcs.pms.handler.BoardDetailCommand;
+import com.eomcs.pms.handler.BoardListCommand;
+import com.eomcs.pms.handler.BoardUpdateCommand;
+import com.eomcs.pms.handler.Command;
+import com.eomcs.pms.handler.HelloCommand;
+import com.eomcs.pms.handler.MemberAddCommand;
+import com.eomcs.pms.handler.MemberDeleteCommand;
+import com.eomcs.pms.handler.MemberDetailCommand;
+import com.eomcs.pms.handler.MemberListCommand;
+import com.eomcs.pms.handler.MemberUpdateCommand;
+import com.eomcs.pms.handler.ProjectAddCommand;
+import com.eomcs.pms.handler.ProjectDeleteCommand;
+import com.eomcs.pms.handler.ProjectDetailCommand;
+import com.eomcs.pms.handler.ProjectListCommand;
+import com.eomcs.pms.handler.ProjectUpdateCommand;
+import com.eomcs.pms.handler.TaskAddCommand;
+import com.eomcs.pms.handler.TaskDeleteCommand;
+import com.eomcs.pms.handler.TaskDetailCommand;
+import com.eomcs.pms.handler.TaskListCommand;
+import com.eomcs.pms.handler.TaskUpdateCommand;
+import com.eomcs.pms.listener.AppInitListener;
+import com.eomcs.pms.listener.DataHandlerListener;
 import com.eomcs.util.Prompt;
 
 public class App {
 
-  public static void main(String[] args) {
+  // 옵저버와 공유할 맵 객체
+  Map<String,Object> context = new Hashtable<>();
+
+  // 옵저버를 보관할 컬렉션 객체
+  List<ApplicationContextListener> listeners = new ArrayList<>();
+
+  // 옵저버를 등록하는 메서드
+  public void addApplicationContextListener(ApplicationContextListener listener) {
+    listeners.add(listener);
+  }
+
+  // 옵저버를 제거하는 메서드
+  public void removeApplicationContextListener(ApplicationContextListener listener) {
+    listeners.remove(listener);
+  }
+
+  // service() 실행 전에 옵저버에게 통지한다.
+  private void notifyApplicationContextListenerOnServiceStarted() {
+    for (ApplicationContextListener listener : listeners) {
+      // 곧 서비스를 시작할테니 준비하라고,
+      // 서비스 시작에 관심있는 각 옵저버에게 통지한다.
+      // => 옵저버에게 맵 객체를 넘겨준다.
+      // => 옵저버는 작업 결과를 파라미터로 넘겨준 맵 객체에 담아 줄 것이다.
+      listener.contextInitialized(context);
+    }
+  }
+
+  // service() 실행 후에 옵저버에게 통지한다.
+  private void notifyApplicationContextListenerOnServiceStopped() {
+    for (ApplicationContextListener listener : listeners) {
+      // 서비스가 종료되었으니 마무리 작업하라고,
+      // 마무리 작업에 관심있는 각 옵저버에게 통지한다.
+      // => 옵저버에게 맵 객체를 넘겨준다.
+      // => 옵저버는 작업 결과를 파라미터로 넘겨준 맵 객체에 담아 줄 것이다.
+      listener.contextDestroyed(context);
+    }
+  }
 
 
-    BoardHandler boardHandler = new BoardHandler();
+  public static void main(String[] args) throws Exception {
+    App app = new App();
 
+    // 옵저버 등록
+    app.addApplicationContextListener(new AppInitListener());
+    app.addApplicationContextListener(new DataHandlerListener());
 
-    BoardHandler boardHandler2 = new BoardHandler();
+    app.service();
+  }
 
-    // 세 번째, 네 번째, 다섯 번째, 여섯 번째 게시판에서 다룰 변수를 각각 준비한다.
-    BoardHandler boardHandler3 = new BoardHandler();
-    BoardHandler boardHandler4 = new BoardHandler();
-    BoardHandler boardHandler5 = new BoardHandler();
-    BoardHandler boardHandler6 = new BoardHandler();
+  @SuppressWarnings("unchecked")
+  public void service() throws Exception {
 
-    // 다음과 같이 기보 생성자만 있는 경우는,
-    // 해당 인스턴스를 생성하고 초기화시킬 때 외부에서 값을 받을 필요가 없다는 의미다.
-    MemberHandler memberHandler = new MemberHandler();
+    notifyApplicationContextListenerOnServiceStarted();
 
-    //ProjectHandler 또는 TaskHandler 를 생설할 때 필요로 하는 의존 객체를 전달한다.
-    // => 이렇게 생성자를 적용하면,
-    // 		객체를 생성하는 개발자에게 인스턴스 사용에 필요한
-    //		값이나 의존 객체 주입을 강제하는 효과가 있다.
-    ProjectHandler projectHandler = new ProjectHandler(memberHandler);
+    // 옵저버가 작업한 결과를 맵에서 꺼낸다.
+    List<Board> boardList = (List<Board>) context.get("boardList");
+    List<Member> memberList = (List<Member>) context.get("memberList");
+    List<Project> projectList = (List<Project>) context.get("projectList");
+    List<Task> taskList = (List<Task>) context.get("taskList");
 
-    // projectHandler.memberHandler = memberHandler;
+    Map<String,Command> commandMap = new HashMap<>();
 
-    TaskHandler taskHandler = new TaskHandler(memberHandler);
+    commandMap.put("/board/add", new BoardAddCommand(boardList));
+    commandMap.put("/board/list", new BoardListCommand(boardList));
+    commandMap.put("/board/detail", new BoardDetailCommand(boardList));
+    commandMap.put("/board/update", new BoardUpdateCommand(boardList));
+    commandMap.put("/board/delete", new BoardDeleteCommand(boardList));
 
-    //taskHandler.memberHandler = memberHandler;
+    MemberListCommand memberListCommand = new MemberListCommand(memberList);
+    commandMap.put("/member/add", new MemberAddCommand(memberList));
+    commandMap.put("/member/list", memberListCommand);
+    commandMap.put("/member/detail", new MemberDetailCommand(memberList));
+    commandMap.put("/member/update", new MemberUpdateCommand(memberList));
+    commandMap.put("/member/delete", new MemberDeleteCommand(memberList));
+
+    commandMap.put("/project/add", new ProjectAddCommand(projectList, memberListCommand));
+    commandMap.put("/project/list", new ProjectListCommand(projectList));
+    commandMap.put("/project/detail", new ProjectDetailCommand(projectList));
+    commandMap.put("/project/update", new ProjectUpdateCommand(projectList, memberListCommand));
+    commandMap.put("/project/delete", new ProjectDeleteCommand(projectList));
+
+    commandMap.put("/task/add", new TaskAddCommand(taskList, memberListCommand));
+    commandMap.put("/task/list", new TaskListCommand(taskList));
+    commandMap.put("/task/detail", new TaskDetailCommand(taskList));
+    commandMap.put("/task/update", new TaskUpdateCommand(taskList, memberListCommand));
+    commandMap.put("/task/delete", new TaskDeleteCommand(taskList));
+
+    commandMap.put("/hello", new HelloCommand());
+
+    Deque<String> commandStack = new ArrayDeque<>();
+    Queue<String> commandQueue = new LinkedList<>();
 
     loop:
       while (true) {
-        String command = Prompt.inputString("명령> ");
+        String inputStr = Prompt.inputString("명령> ");
 
-        switch (command) {
-          case "/member/add": memberHandler.add(); break;
-          case "/member/list": memberHandler.list(); break;
-          case "/project/add": projectHandler.add(); break;
-          case "/project/list": projectHandler.list(); break;
-          case "/task/add": taskHandler.add(); break;
-          case "/task/list": taskHandler.list(); break;
-          case "/board/add": boardHandler.add(); break;
-          case "/board/list": boardHandler.list(); break;
-          case "/board2/add": boardHandler2.add(); break;
-          case "/board2/list": boardHandler2.list(); break;
-          case "/board3/add": boardHandler3.add(); break;
-          case "/board3/list": boardHandler3.list(); break;
-          case "/board4/add": boardHandler4.add(); break;
-          case "/board4/list": boardHandler4.list(); break;
-          case "/board5/add": boardHandler5.add(); break;
-          case "/board5/list": boardHandler5.list(); break;
-          case "/board6/add": boardHandler6.add(); break;
-          case "/board6/list": boardHandler6.list(); break;
+        if (inputStr.length() == 0) {
+          continue;
+        }
+
+        commandStack.push(inputStr);
+        commandQueue.offer(inputStr);
+
+        switch (inputStr) {
+          case "history": printCommandHistory(commandStack.iterator()); break;
+          case "history2": printCommandHistory(commandQueue.iterator()); break;
           case "quit":
           case "exit":
             System.out.println("안녕!");
             break loop;
           default:
-            System.out.println("실행할 수 없는 명령입니다.");
+            Command command = commandMap.get(inputStr);
+            if (command != null) {
+              try {
+                // 실행 중 오류가 발생할 수 있는 코드는 try 블록 안에 둔다.
+                command.execute();
+              } catch (Exception e) {
+                // 오류가 발생하면 그 정보를 갖고 있는 객체의 클래스 이름을 출력한다.
+                System.out.println("--------------------------------------------------------------");
+                System.out.printf("명령어 실행 중 오류 발생: %s\n", e);
+                System.out.println("--------------------------------------------------------------");
+              }
+            } else {
+              System.out.println("실행할 수 없는 명령입니다.");
+            }
         }
-        System.out.println(); // 이전 명령의 실행을 구분하기 위해 빈 줄 출력
+        System.out.println();
       }
 
     Prompt.close();
+
+    notifyApplicationContextListenerOnServiceStopped();
   }
+
+  void printCommandHistory(Iterator<String> iterator) {
+    try {
+      int count = 0;
+      while (iterator.hasNext()) {
+        System.out.println(iterator.next());
+        count++;
+
+        if ((count % 5) == 0 && Prompt.inputString(":").equalsIgnoreCase("q")) {
+          break;
+        }
+      }
+    } catch (Exception e) {
+      System.out.println("history 명령 처리 중 오류 발생!");
+    }
+  }
+
+
+
+
 }
