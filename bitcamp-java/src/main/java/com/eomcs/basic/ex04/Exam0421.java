@@ -1,0 +1,25 @@
+package com.eomcs.basic.ex04;
+
+public class Exam0421 {
+	public static void main(String[] args) {
+		
+		float f;
+		
+		f = 9.876545f;
+		System.out.println(f);
+		
+		f = 987654.5f;
+		System.out.println(f);
+		
+		f = 0.000009876545f;
+		System.out.println(f);
+		
+		f = 9.876545f;
+		System.out.println(f);
+		
+		f = 987654.6f;
+		System.out.println(f);
+		
+	}
+
+}
