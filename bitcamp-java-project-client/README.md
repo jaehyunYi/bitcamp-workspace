@@ -154,9 +154,37 @@ alter table pms_task
 
 alter table pms_task
   add constraint pms_task_fk2 foreign key(project_no) references pms_project(no);
+  
+alter table pms_task
+  add constraint pms_task_fk1 foreign key(owner, project_no) 
+    references pms_member_project(member_no, project_no);
 ```
 
 - com.eomcs.pms.domain.Task변경
+  - 프로젝트 번호를 저장할 필드를 추가한다.
+-com.eomcs.pms.handler.TaskXxxCommand변경 
+ - 작업 정보를 등록하거나, 조회, 변경 할 때
+
+create table pms_board(
+  no int not null,
+  title varchar(255) not null,
+  content text not null,
+  writer int not null,
+  cdt datetime default now(),
+  vw_cnt int default 0
+);
+
+alter table pms_board
+  add constraint pms_board_pk primary key(no);
+
+alter table pms_board
+  modify column no int not null auto_increment;
+  
+alter table pms_board
+  add constraint pms_board_fk foreign key(writer) references pms_member(no);
+  
+
+
 
 
 ## 실습 결과
