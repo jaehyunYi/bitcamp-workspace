@@ -12,8 +12,8 @@ public class BoardAddCommand implements Command {
   MemberDao memberDao;
 
   public BoardAddCommand(BoardDao boardDao, MemberDao memberDao) {
-	  this.boardDao = boardDao;
-	  this.memberDao = memberDao;
+    this.boardDao = boardDao;
+    this.memberDao = memberDao;
   }
 
   @Override

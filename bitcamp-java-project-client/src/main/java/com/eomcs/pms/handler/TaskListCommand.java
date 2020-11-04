@@ -5,7 +5,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import com.eomcs.pms.dao.TaskDao;
+
 public class TaskListCommand implements Command {
+	TaskDao taskDao;
+	public TaskListCommand(TaskDao taskDao) {
+		this.taskDao = taskDao;
+	}
 
   @Override
   public void execute() {
@@ -15,7 +21,7 @@ public class TaskListCommand implements Command {
         "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
         PreparedStatement stmt = con.prepareStatement(
             "select t.no, t.content, t.deadline, t.owner, t.status, m.name owner_name"
-                + " from pms_task t inner join pms_member m on t.owner = m.no"
+                + " from pms_task t inner join pms_member m on t.owner=m.no"
                 + " order by t.deadline asc")) {
 
       try (ResultSet rs = stmt.executeQuery()) {

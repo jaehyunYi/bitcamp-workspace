@@ -1,7 +1,6 @@
 package com.eomcs.pms.handler;
 
 import java.util.List;
-
 import com.eomcs.pms.dao.BoardDao;
 import com.eomcs.pms.domain.Board;
 
@@ -10,8 +9,8 @@ public class BoardListCommand implements Command {
   BoardDao boardDao;
 
   public BoardListCommand(BoardDao boardDao) {
-	  this.boardDao = boardDao;
-}
+    this.boardDao = boardDao;
+  }
 
   @Override
   public void execute() {

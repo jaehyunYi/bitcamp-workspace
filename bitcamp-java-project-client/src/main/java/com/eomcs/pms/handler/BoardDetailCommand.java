@@ -8,8 +8,8 @@ public class BoardDetailCommand implements Command {
   BoardDao boardDao;
 
   public BoardDetailCommand(BoardDao boardDao) {
-	  this.boardDao = boardDao;
-}
+    this.boardDao = boardDao;
+  }
 
   @Override
   public void execute() {

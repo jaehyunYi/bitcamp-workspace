@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.domain.Member;
 
@@ -39,97 +38,93 @@ public class BoardDao {
   }
 
   public Board findByNo(int no) throws Exception {
-	  try (Connection con = DriverManager.getConnection(
-		        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
-		        PreparedStatement stmt = con.prepareStatement(
-		            "select b.no,"
-		            		+ " b.title,"
-		            		+ " b.content,"
-		            		+ " b.writer,"
-		            		+ " b.cdt,"
-		            		+ " b.vw_cnt,"
-		            		+ " m.no writer_no,"
-		            		+ " m.name"
-		            		+ " from pms_board b inner join pms_member m on b.writer=m.no"
-		            		+ " where b.no = ?")) {
+    try (Connection con = DriverManager.getConnection(
+        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
+        PreparedStatement stmt = con.prepareStatement(
+            "select"
+                + " b.no,"
+                + " b.title,"
+                + " b.content,"
+                + " b.cdt,"
+                + " b.vw_cnt,"
+                + " m.no writer_no,"
+                + " m.name"
+                + " from pms_board b inner join pms_member m on b.writer=m.no"
+                + " where b.no = ?")) {
 
-		      stmt.setInt(1, no);
-		      try (ResultSet rs = stmt.executeQuery()) {
-		        if (rs.next()) {
-		        	Board board = new Board();
-		        	board.setNo(rs.getInt("no"));
-		        	System.out.printf("제목: %s\n", rs.getString("title"));
-		          System.out.printf("내용: %s\n", rs.getString("content"));
+      stmt.setInt(1, no);
+      try (ResultSet rs = stmt.executeQuery()) {
+        if (rs.next()) {
+          Board board = new Board();
+          board.setNo(rs.getInt("no"));
+          board.setTitle(rs.getString("title"));
+          board.setContent(rs.getString("content"));
 
-		          Member member = new Member();
-		          member.setNo(rs.getInt("writer_no"));
-		          member.setName(rs.getString("name"));
-		          board.setWriter(member);
+          Member member = new Member();
+          member.setNo(rs.getInt("writer_no"));
+          member.setName(rs.getString("name"));
+          board.setWriter(member);
 
-		          System.out.printf("작성자: %s\n", rs.getString("name"));
-		          System.out.printf("등록일: %s\n", rs.getDate("cdt"));
+          board.setRegisteredDate(rs.getDate("cdt"));
+          board.setViewCount(rs.getInt("vw_cnt") + 1);
 
-		          board.setRegisteredDate(rs.getDate("cdt"));
-		          System.out.printf("조회수: %d\n", rs.getInt("vw_cnt") + 1);
-
-		          try (PreparedStatement stmt2 = con.prepareStatement(
-		              "update pms_board set vw_cnt = vw_cnt + 1"
-		                  + " where no = ?")) {
-		            stmt2.setInt(1, no);
-		            stmt2.executeUpdate(); // 조회수 증가
-		          }
-		          return board;
-
-		        } else {
-		         return null;
-		        }
-		      }
-	  }
+          try (PreparedStatement stmt2 = con.prepareStatement(
+              "update pms_board set vw_cnt = vw_cnt + 1"
+                  + " where no = ?")) {
+            stmt2.setInt(1, no);
+            stmt2.executeUpdate(); // 조회수 증가
+          }
+          return board;
+        } else {
+          return null;
+        }
+      }
+    }
   }
 
   public List<Board> findAll() throws Exception {
-	    try (Connection con = DriverManager.getConnection(
-	        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
-	        PreparedStatement stmt = con.prepareStatement(
-	            "select b.no, b.title, b.cdt, b.vw_cnt, m.no writer_no, m.name"
-	                + " from pms_board b inner join pms_member m on b.writer=m.no"
-	                + " order by b.no desc")) {
+    try (Connection con = DriverManager.getConnection(
+        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
+        PreparedStatement stmt = con.prepareStatement(
+            "select b.no, b.title, b.cdt, b.vw_cnt, m.no writer_no, m.name"
+                + " from pms_board b inner join pms_member m on b.writer=m.no"
+                + " order by b.no desc")) {
 
-	      try (ResultSet rs = stmt.executeQuery()) {
+      try (ResultSet rs = stmt.executeQuery()) {
 
-	        ArrayList<Board> list = new ArrayList<>();
+        ArrayList<Board> list = new ArrayList<>();
 
-	        while (rs.next()) {
-	          Board board = new Board();
-	          board.setNo(rs.getInt("no"));
-	          board.setTitle(rs.getString("title"));
+        while (rs.next()) {
+          Board board = new Board();
+          board.setNo(rs.getInt("no"));
+          board.setTitle(rs.getString("title"));
 
-	          Member member = new Member();
-	          member.setNo(rs.getInt("writer_no"));
-	          member.setName(rs.getString("name"));
-	          board.setWriter(member);
+          Member member = new Member();
+          member.setNo(rs.getInt("writer_no"));
+          member.setName(rs.getString("name"));
+          board.setWriter(member);
 
-	          board.setRegisteredDate(rs.getDate("cdt"));
-	          board.setViewCount(rs.getInt("vw_cnt"));
+          board.setRegisteredDate(rs.getDate("cdt"));
+          board.setViewCount(rs.getInt("vw_cnt"));
 
-	          list.add(board);
-	        }
-	        return list;
-	      }
-	    }
-	  }
+          list.add(board);
+        }
+        return list;
+      }
+    }
+  }
 
   public int update(Board board) throws Exception {
-	  try (Connection con = DriverManager.getConnection(
-		        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
-		        PreparedStatement stmt = con.prepareStatement(
-		            "update pms_board set title = ?, content = ? where no = ?")) {
+    try (Connection con = DriverManager.getConnection(
+        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
+        PreparedStatement stmt = con.prepareStatement(
+            "update pms_board set title = ?, content = ? where no = ?")) {
 
-		      stmt.setString(1, board.getTitle());
-		      stmt.setString(2, board.getContent());
-		      stmt.setInt(3, board.getNo());
-		      return stmt.executeUpdate();
-		    }
+      stmt.setString(1, board.getTitle());
+      stmt.setString(2, board.getContent());
+      stmt.setInt(3, board.getNo());
+      return stmt.executeUpdate();
+    }
   }
 }
 
