@@ -5,24 +5,24 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.domain.Member;
 
 // 역할
 // - 게시글 데이터를 등록,조회,목록조회,변경,삭제 처리하는 일을 한다.
 //
-public class BoardDaoImpl implements com.eomcs.pms.dao.BoardDao {
+public class BoardDaoImpl implements com.eomcs.pms.dao.BoardDao{
 
-	Connection con;
-	public BoardDaoImpl (Connection con) {
-		this.con = con;
-	}
+  Connection con;
+
+  public BoardDaoImpl(Connection con) {
+    this.con = con;
+  }
 
   @Override
-public int insert(Board board) throws Exception {
+  public int insert(Board board) throws Exception {
     try (PreparedStatement stmt = con.prepareStatement(
-          "insert into pms_board(title,content,writer) values(?,?,?)")) {
+        "insert into pms_board(title,content,writer) values(?,?,?)")) {
 
       stmt.setString(1, board.getTitle());
       stmt.setString(2, board.getContent());
@@ -32,8 +32,9 @@ public int insert(Board board) throws Exception {
   }
 
   @Override
-public int delete(int no) throws Exception {
-    try (PreparedStatement stmt = con.prepareStatement("delete from pms_board where no=?")) {
+  public int delete(int no) throws Exception {
+    try (PreparedStatement stmt = con.prepareStatement(
+        "delete from pms_board where no=?")) {
 
       stmt.setInt(1, no);
       return stmt.executeUpdate();
@@ -41,18 +42,18 @@ public int delete(int no) throws Exception {
   }
 
   @Override
-public Board findByNo(int no) throws Exception {
+  public Board findByNo(int no) throws Exception {
     try (PreparedStatement stmt = con.prepareStatement(
-            "select"
-                + " b.no,"
-                + " b.title,"
-                + " b.content,"
-                + " b.cdt,"
-                + " b.vw_cnt,"
-                + " m.no writer_no,"
-                + " m.name"
-                + " from pms_board b inner join pms_member m on b.writer=m.no"
-                + " where b.no = ?")) {
+        "select"
+            + " b.no,"
+            + " b.title,"
+            + " b.content,"
+            + " b.cdt,"
+            + " b.vw_cnt,"
+            + " m.no writer_no,"
+            + " m.name"
+            + " from pms_board b inner join pms_member m on b.writer=m.no"
+            + " where b.no = ?")) {
 
       stmt.setInt(1, no);
       try (ResultSet rs = stmt.executeQuery()) {
@@ -85,11 +86,11 @@ public Board findByNo(int no) throws Exception {
   }
 
   @Override
-public List<Board> findAll() throws Exception {
+  public List<Board> findAll() throws Exception {
     try (PreparedStatement stmt = con.prepareStatement(
-            "select b.no, b.title, b.cdt, b.vw_cnt, m.no writer_no, m.name"
-                + " from pms_board b inner join pms_member m on b.writer=m.no"
-                + " order by b.no desc")) {
+        "select b.no, b.title, b.cdt, b.vw_cnt, m.no writer_no, m.name"
+            + " from pms_board b inner join pms_member m on b.writer=m.no"
+            + " order by b.no desc")) {
 
       try (ResultSet rs = stmt.executeQuery()) {
 
@@ -116,9 +117,9 @@ public List<Board> findAll() throws Exception {
   }
 
   @Override
-public int update(Board board) throws Exception {
+  public int update(Board board) throws Exception {
     try (PreparedStatement stmt = con.prepareStatement(
-            "update pms_board set title = ?, content = ? where no = ?")) {
+        "update pms_board set title = ?, content = ? where no = ?")) {
 
       stmt.setString(1, board.getTitle());
       stmt.setString(2, board.getContent());
