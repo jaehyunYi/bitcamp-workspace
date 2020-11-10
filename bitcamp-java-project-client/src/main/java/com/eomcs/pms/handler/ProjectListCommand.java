@@ -2,15 +2,19 @@ package com.eomcs.pms.handler;
 
 import java.util.List;
 import java.util.Map;
+
+import com.eomcs.pms.dao.MemberDao;
 import com.eomcs.pms.dao.ProjectDao;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
 
 public class ProjectListCommand implements Command {
   ProjectDao projectDao;
+  MemberDao memberDao;
 
-  public ProjectListCommand(ProjectDao projectDao) {
+  public ProjectListCommand(ProjectDao projectDao, MemberDao memberDao) {
     this.projectDao = projectDao;
+    this.memberDao = memberDao;
   }
 
   @Override
@@ -23,11 +27,13 @@ public class ProjectListCommand implements Command {
 
       for (Project project : list) {
         StringBuilder members = new StringBuilder();
-        for (Member member : project.getMembers()) {
-          if (members.length() > 0) {
-            members.append(",");
-          }
-          members.append(member.getName());
+
+        	for (Member member : project.getMembers()) {
+        		if (members.length() > 0) {
+        			members.append(",");
+        		}
+          members.append(member.getName() + "(" + member.hashCode() +")");
+
         }
 
         System.out.printf("%d, %s, %s ~ %s, %s, [%s]\n",
@@ -36,6 +42,7 @@ public class ProjectListCommand implements Command {
             project.getStartDate(),
             project.getEndDate(),
             project.getOwner().getName(),
+            project.getOwner().hashCode(),
             members.toString());
       }
     } catch (Exception e) {
