@@ -1,9 +1,9 @@
 package com.eomcs.pms;
 
+import java.io.File;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -11,34 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import com.eomcs.context.ApplicationContextListener;
-import com.eomcs.pms.domain.Board;
-import com.eomcs.pms.domain.Member;
-import com.eomcs.pms.domain.Project;
-import com.eomcs.pms.domain.Task;
-import com.eomcs.pms.handler.BoardAddCommand;
-import com.eomcs.pms.handler.BoardDeleteCommand;
-import com.eomcs.pms.handler.BoardDetailCommand;
-import com.eomcs.pms.handler.BoardListCommand;
-import com.eomcs.pms.handler.BoardUpdateCommand;
-import com.eomcs.pms.handler.Command;
-import com.eomcs.pms.handler.HelloCommand;
-import com.eomcs.pms.handler.MemberAddCommand;
-import com.eomcs.pms.handler.MemberDeleteCommand;
-import com.eomcs.pms.handler.MemberDetailCommand;
-import com.eomcs.pms.handler.MemberListCommand;
-import com.eomcs.pms.handler.MemberUpdateCommand;
-import com.eomcs.pms.handler.ProjectAddCommand;
-import com.eomcs.pms.handler.ProjectDeleteCommand;
-import com.eomcs.pms.handler.ProjectDetailCommand;
-import com.eomcs.pms.handler.ProjectListCommand;
-import com.eomcs.pms.handler.ProjectUpdateCommand;
-import com.eomcs.pms.handler.TaskAddCommand;
-import com.eomcs.pms.handler.TaskDeleteCommand;
-import com.eomcs.pms.handler.TaskDetailCommand;
-import com.eomcs.pms.handler.TaskListCommand;
-import com.eomcs.pms.handler.TaskUpdateCommand;
+import com.eomcs.pms.filter.CommandFilterManager;
+import com.eomcs.pms.filter.DefaultCommandFilter;
+import com.eomcs.pms.filter.FilterChain;
+import com.eomcs.pms.filter.LogCommandFilter;
+import com.eomcs.pms.handler.Request;
 import com.eomcs.pms.listener.AppInitListener;
-import com.eomcs.pms.listener.DataHandlerListener;
 import com.eomcs.util.Prompt;
 
 public class App {
@@ -87,50 +65,31 @@ public class App {
 
     // 옵저버 등록
     app.addApplicationContextListener(new AppInitListener());
-    app.addApplicationContextListener(new DataHandlerListener());
 
     app.service();
   }
 
-  @SuppressWarnings("unchecked")
   public void service() throws Exception {
 
     notifyApplicationContextListenerOnServiceStarted();
 
-    // 옵저버가 작업한 결과를 맵에서 꺼낸다.
-    List<Board> boardList = (List<Board>) context.get("boardList");
-    List<Member> memberList = (List<Member>) context.get("memberList");
-    List<Project> projectList = (List<Project>) context.get("projectList");
-    List<Task> taskList = (List<Task>) context.get("taskList");
+    // 필터 관리자 준비
+    CommandFilterManager filterManager = new CommandFilterManager();
 
-    Map<String,Command> commandMap = new HashMap<>();
+    // 필터를 등록한다.
+    filterManager.add(new LogCommandFilter());
+    //filterManager.add(new AuthCommandFilter());
+    filterManager.add(new DefaultCommandFilter());
 
-    commandMap.put("/board/add", new BoardAddCommand(boardList));
-    commandMap.put("/board/list", new BoardListCommand(boardList));
-    commandMap.put("/board/detail", new BoardDetailCommand(boardList));
-    commandMap.put("/board/update", new BoardUpdateCommand(boardList));
-    commandMap.put("/board/delete", new BoardDeleteCommand(boardList));
+    // 필터가 사용할 값을 context 맵에 담는다.
+    File logFile = new File("command.log");
+    context.put("logFile", logFile);
 
-    MemberListCommand memberListCommand = new MemberListCommand(memberList);
-    commandMap.put("/member/add", new MemberAddCommand(memberList));
-    commandMap.put("/member/list", memberListCommand);
-    commandMap.put("/member/detail", new MemberDetailCommand(memberList));
-    commandMap.put("/member/update", new MemberUpdateCommand(memberList));
-    commandMap.put("/member/delete", new MemberDeleteCommand(memberList));
+    // 필터들을 준비시킨다.
+    filterManager.init(context);
 
-    commandMap.put("/project/add", new ProjectAddCommand(projectList, memberListCommand));
-    commandMap.put("/project/list", new ProjectListCommand(projectList));
-    commandMap.put("/project/detail", new ProjectDetailCommand(projectList));
-    commandMap.put("/project/update", new ProjectUpdateCommand(projectList, memberListCommand));
-    commandMap.put("/project/delete", new ProjectDeleteCommand(projectList));
-
-    commandMap.put("/task/add", new TaskAddCommand(taskList, memberListCommand));
-    commandMap.put("/task/list", new TaskListCommand(taskList));
-    commandMap.put("/task/detail", new TaskDetailCommand(taskList));
-    commandMap.put("/task/update", new TaskUpdateCommand(taskList, memberListCommand));
-    commandMap.put("/task/delete", new TaskDeleteCommand(taskList));
-
-    commandMap.put("/hello", new HelloCommand());
+    // 사용자가 입력한 명령을 처리할 필터 체인을 얻는다.
+    FilterChain filterChain = filterManager.getFilterChains();
 
     Deque<String> commandStack = new ArrayDeque<>();
     Queue<String> commandQueue = new LinkedList<>();
@@ -154,25 +113,20 @@ public class App {
             System.out.println("안녕!");
             break loop;
           default:
-            Command command = commandMap.get(inputStr);
-            if (command != null) {
-              try {
-                // 실행 중 오류가 발생할 수 있는 코드는 try 블록 안에 둔다.
-                command.execute();
-              } catch (Exception e) {
-                // 오류가 발생하면 그 정보를 갖고 있는 객체의 클래스 이름을 출력한다.
-                System.out.println("--------------------------------------------------------------");
-                System.out.printf("명령어 실행 중 오류 발생: %s\n", e);
-                System.out.println("--------------------------------------------------------------");
-              }
-            } else {
-              System.out.println("실행할 수 없는 명령입니다.");
+            // 커맨드나 필터가 사용할 객체를 준비한다.
+            Request request = new Request(inputStr, context);
+
+            // 필터들의 체인을 실행한다.
+            if (filterChain != null) {
+              filterChain.doFilter(request);
             }
         }
         System.out.println();
       }
-
     Prompt.close();
+
+    // 필터들을 마무리시킨다.
+    filterManager.destroy();
 
     notifyApplicationContextListenerOnServiceStopped();
   }
@@ -192,8 +146,4 @@ public class App {
       System.out.println("history 명령 처리 중 오류 발생!");
     }
   }
-
-
-
-
 }
