@@ -89,10 +89,10 @@
   </select>
   
   <update id="update" parameterType="member">
-    update pms_member 
+    update pms_member
     <set>
       <if test="name != ''">name = #{name},</if>
-      <if test="email != ''">  email = #{email},</if>
+      <if test="email != ''">email = #{email},</if>
       <if test="password != ''">password = password(#{password}),</if>
       <if test="photo != ''">photo = #{photo},</if>
       <if test="tel != ''">tel = #{tel}</if>

@@ -1,10 +1,9 @@
 package com.eomcs.pms.dao.mariadb;
 
 import java.util.List;
-
+import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-
 import com.eomcs.pms.domain.Task;
 
 public class TaskDaoImpl implements com.eomcs.pms.dao.TaskDao {
@@ -31,7 +30,7 @@ public class TaskDaoImpl implements com.eomcs.pms.dao.TaskDao {
 
   @Override
   public int deleteByProjectNo(int projectNo) throws Exception {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       return sqlSession.delete("TaskDao.deleteByProjectNo", projectNo);
     }
   }
@@ -44,9 +43,9 @@ public class TaskDaoImpl implements com.eomcs.pms.dao.TaskDao {
   }
 
   @Override
-  public List<Task> findAll() throws Exception {
+  public List<Task> findAll(Map<String,Object> map) throws Exception {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      return sqlSession.selectList("TaskDao.findAll");
+      return sqlSession.selectList("TaskDao.findAll", map);
     }
   }
 
