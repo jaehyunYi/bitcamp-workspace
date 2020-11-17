@@ -87,17 +87,17 @@ public class DefaultProjectService implements ProjectService {
     //
     return projectDao.findAll(keyword);
   }
-  
+
   @Override
   public List<Project> list(Map<String, Object> keywords) throws Exception {
     return projectDao.findByDetailKeyword(keywords);
   }
-  
+
   @Override
   public Project get(int no) throws Exception {
     return projectDao.findByNo(no);
   }
-  
+
   @Override
   public int update(Project project) throws Exception {
     return projectDao.update(project);

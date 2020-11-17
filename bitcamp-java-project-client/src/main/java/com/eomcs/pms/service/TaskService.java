@@ -5,5 +5,4 @@ import com.eomcs.pms.domain.Task;
 
 public interface TaskService {
   List<Task> listByProject(int projectNo) throws Exception;
-
 }
