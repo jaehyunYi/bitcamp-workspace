@@ -3,7 +3,6 @@ package com.eomcs.pms.handler;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.Map;
-import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.service.MemberService;
 import com.eomcs.util.Prompt;
 
@@ -16,11 +15,10 @@ public class MemberDeleteCommand implements Command {
   }
 
   @Override
-  public void execute(PrintWriter out, BufferedReader in, Map<String, Object> context) {
+  public void execute(PrintWriter out, BufferedReader in, Map<String,Object> context) {
     try {
       out.println("[회원 삭제]");
       int no = Prompt.inputInt("번호? ", out, in);
-      
 
       String response = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ", out, in);
       if (!response.equalsIgnoreCase("y")) {

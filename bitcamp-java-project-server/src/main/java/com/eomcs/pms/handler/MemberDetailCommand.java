@@ -14,12 +14,13 @@ public class MemberDetailCommand implements Command {
   public MemberDetailCommand(MemberService memberService) {
     this.memberService = memberService;
   }
-  
+
   @Override
-  public void execute(PrintWriter out, BufferedReader in, Map<String, Object> context) {
+  public void execute(PrintWriter out, BufferedReader in, Map<String,Object> context) {
     try {
       out.println("[회원 상세보기]");
       int no = Prompt.inputInt("번호? ", out, in);
+
       Member member = memberService.get(no);
 
       if (member == null) {

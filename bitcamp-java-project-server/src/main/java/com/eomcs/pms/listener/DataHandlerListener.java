@@ -1,13 +1,5 @@
 package com.eomcs.pms.listener;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Map;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -29,7 +21,6 @@ import com.eomcs.pms.service.MemberService;
 import com.eomcs.pms.service.ProjectService;
 import com.eomcs.pms.service.TaskService;
 import com.eomcs.util.SqlSessionFactoryProxy;
-import com.google.gson.Gson;
 
 // 게시물, 회원, 프로젝트, 작업 데이터를 파일에서 로딩하고 파일로 저장하는 일을 한다.
 public class DataHandlerListener implements ApplicationContextListener {
@@ -49,12 +40,12 @@ public class DataHandlerListener implements ApplicationContextListener {
       ProjectDao projectDao = new ProjectDaoImpl(sqlSessionFactory);
       TaskDao taskDao = new TaskDaoImpl(sqlSessionFactory);
 
-      // DAO 구현체 생성 
+      // Service 구현체 생성
       BoardService boardService = new DefaultBoardService(boardDao);
       MemberService memberService = new DefaultMemberService(memberDao);
       ProjectService projectService = new DefaultProjectService(taskDao, projectDao, sqlSessionFactory);
       TaskService taskService = new DefaultTaskService(taskDao);
-      
+
       // 다른 객체가 사용할 수 있도록 context 맵 보관소에 저장해둔다.
       context.put("boardService", boardService);
       context.put("memberService", memberService);
@@ -62,13 +53,12 @@ public class DataHandlerListener implements ApplicationContextListener {
       context.put("taskService", taskService);
 
     } catch (Exception e) {
-      System.out.println("Mybatis 및 DAO 객체 준비 중 오류 발생!");
-       e.printStackTrace();
+      System.out.println("Mybatis 및 DAO, 서비스 객체 준비 중 오류 발생!");
+      e.printStackTrace();
     }
   }
 
   @Override
   public void contextDestroyed(Map<String,Object> context) {
-    
-  } 
+  }
 }

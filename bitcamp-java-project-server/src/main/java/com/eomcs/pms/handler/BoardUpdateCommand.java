@@ -16,10 +16,11 @@ public class BoardUpdateCommand implements Command {
   }
 
   @Override
-  public void execute(PrintWriter out, BufferedReader in, Map<String, Object> context) {
+  public void execute(PrintWriter out, BufferedReader in, Map<String,Object> context) {
     try {
       out.println("[게시물 변경]");
       int no = Prompt.inputInt("번호? ", out, in);
+
       Board board = boardService.get(no);
 
       if (board == null) {
@@ -31,13 +32,15 @@ public class BoardUpdateCommand implements Command {
           String.format("제목(%s)? ", board.getTitle()), out, in));
       board.setContent(Prompt.inputString(
           String.format("내용(%s)? ", board.getContent()), out, in));
-      
+
       String response = Prompt.inputString("정말 변경하시겠습니까?(y/N) ", out, in);
       if (!response.equalsIgnoreCase("y")) {
         out.println("게시글 변경을 취소하였습니다.");
         return;
       }
+
       boardService.update(board);
+
       out.println("게시글을 변경하였습니다.");
 
     } catch (Exception e) {
