@@ -1,4 +1,3 @@
 /login
-/project/detail
-project/update
-/project/update
+/project/add
+/project/list
