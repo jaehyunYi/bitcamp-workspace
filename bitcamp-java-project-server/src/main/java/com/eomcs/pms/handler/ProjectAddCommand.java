@@ -4,15 +4,16 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.List;
 import com.eomcs.pms.domain.Project;
+import com.eomcs.pms.service.ProjectService;
 import com.eomcs.util.Prompt;
 
 public class ProjectAddCommand implements Command {
 
-  List<Project> projectList;
+  ProjectService projectService;
   MemberListCommand memberListCommand;
 
-  public ProjectAddCommand(List<Project> list, MemberListCommand memberListCommand) {
-    this.projectList = list;
+  public ProjectAddCommand( ProjectService projectService, MemberListCommand memberListCommand) {
+    this.projectService = projectService;
     this.memberListCommand = memberListCommand;
   }
 

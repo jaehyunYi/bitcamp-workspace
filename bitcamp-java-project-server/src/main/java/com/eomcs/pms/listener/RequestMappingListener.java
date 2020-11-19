@@ -4,7 +4,15 @@ import java.util.Map;
 import com.eomcs.context.ApplicationContextListener;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.handler.BoardAddCommand;
+import com.eomcs.pms.handler.BoardDeleteCommand;
+import com.eomcs.pms.handler.BoardDetailCommand;
 import com.eomcs.pms.handler.BoardListCommand;
+import com.eomcs.pms.handler.BoardUpdateCommand;
+import com.eomcs.pms.handler.MemberAddCommand;
+import com.eomcs.pms.handler.MemberDeleteCommand;
+import com.eomcs.pms.handler.MemberDetailCommand;
+import com.eomcs.pms.handler.MemberListCommand;
+import com.eomcs.pms.handler.MemberUpdateCommand;
 import com.eomcs.pms.service.BoardService;
 import com.eomcs.pms.service.MemberService;
 import com.eomcs.pms.service.ProjectService;
@@ -30,17 +38,17 @@ public class RequestMappingListener implements ApplicationContextListener {
       
       context.put("/board/add", new BoardAddCommand(boardService));
       context.put("/board/list", new BoardListCommand(boardService));
-//    context.put("/board/detail", new BoardDetailCommand(boardList));
-//    context.put("/board/update", new BoardUpdateCommand(boardList));
-//    context.put("/board/delete", new BoardDeleteCommand(boardList));
-//
-//    MemberListCommand memberListCommand = new MemberListCommand(memberList);
-//    context.put("/member/add", new MemberAddCommand(memberList));
-//    context.put("/member/list", memberListCommand);
-//    context.put("/member/detail", new MemberDetailCommand(memberList));
-//    context.put("/member/update", new MemberUpdateCommand(memberList));
-//    context.put("/member/delete", new MemberDeleteCommand(memberList));
-//
+      context.put("/board/detail", new BoardDetailCommand(boardService));
+      context.put("/board/update", new BoardUpdateCommand(boardService));
+      context.put("/board/delete", new BoardDeleteCommand(boardService));
+  
+      MemberListCommand memberListCommand = new MemberListCommand(memberService);
+      context.put("/member/add", new MemberAddCommand(memberService));
+      context.put("/member/list", memberListCommand);
+      context.put("/member/detail", new MemberDetailCommand(memberService));
+      context.put("/member/update", new MemberUpdateCommand(memberService));
+      context.put("/member/delete", new MemberDeleteCommand(memberService));
+
 //    context.put("/project/add", new ProjectAddCommand(projectList, memberListCommand));
 //    context.put("/project/list", new ProjectListCommand(projectList));
 //    context.put("/project/detail", new ProjectDetailCommand(projectList));
