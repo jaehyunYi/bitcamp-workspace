@@ -23,9 +23,12 @@ public class Servlet02 extends GenericServlet {
     // => 반드시 출력 스트림을 얻기 전에 설정해야 한다.
     // res.setContentType("MIME Type;charset=문자표이름");
     //
-    res.setContentType("text/plain;charset=UTF-8"); // UCS2(UTF-16) ==> UTF-8
+    res.setContentType("text/html;charset=UTF-8"); // UCS2(UTF-16) ==> UTF-8
     PrintWriter out = res.getWriter();
     out.println("Hello!");
+    
+    // 한글이나 아랍어, 일본어, 중국어는 UTF-8 문자표에 정의되어 있기 때문에
+    // UTF-8 문자로 변환할 수 있다.
     out.println("안녕하세요!");
     out.println("こんにちは");
     out.println("您好");

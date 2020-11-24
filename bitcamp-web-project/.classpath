@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="output" path="bin/default"/>
 	<classpathentry output="bin/main" kind="src" path="src/main/java">
 		<attributes>
 			<attribute name="gradle_scope" value="main"/>
@@ -27,15 +26,16 @@
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11/"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="output" path="bin/default"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11/"/>
 	<classpathentry sourcepath="C:/Users/bitcamp/.gradle/caches/modules-2/files-2.1/javax.servlet/javax.servlet-api/4.0.1/49a9da44db6e6b5f44ce15ddfcfe2b6666151b25/javax.servlet-api-4.0.1-sources.jar" kind="lib" path="C:/Users/bitcamp/.gradle/caches/modules-2/files-2.1/javax.servlet/javax.servlet-api/4.0.1/a27082684a2ff0bf397666c3943496c44541d1ca/javax.servlet-api-4.0.1.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value=""/>
 			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="C:/Users/bitcamp/.gradle/caches/modules-2/files-2.1/net.coobird/thumbnailator/0.4.11/6d28c2ef93f9a31fcdd2938a3fde6323dd97c153/thumbnailator-0.4.11-sources.jar" kind="lib" path="C:/Users/bitcamp/.gradle/caches/modules-2/files-2.1/net.coobird/thumbnailator/0.4.11/3ccf64185374af77f1cc4ec9b550baf59bad604/thumbnailator-0.4.11.jar">
+	<classpathentry sourcepath="C:/Users/bitcamp/.gradle/caches/modules-2/files-2.1/net.coobird/thumbnailator/0.4.13/371915ee952676ed3fe92835830398c894faa9b9/thumbnailator-0.4.13-sources.jar" kind="lib" path="C:/Users/bitcamp/.gradle/caches/modules-2/files-2.1/net.coobird/thumbnailator/0.4.13/f6f37507231c0de3b51fd795fabcdef9a51c7343/thumbnailator-0.4.13.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
