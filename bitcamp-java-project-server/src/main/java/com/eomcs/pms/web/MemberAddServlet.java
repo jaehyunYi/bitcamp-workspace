@@ -29,7 +29,7 @@ public class MemberAddServlet extends HttpServlet {
         (MemberService) ctx.getAttribute("memberService");
 
     // 클라이언트가 POST 요청할 때 보낸 데이터를 읽는다.
-    request.setCharacterEncoding("UTF-8");
+    //request.setCharacterEncoding("UTF-8");
 
     Member member = new Member();
     member.setName(request.getParameter("name"));
@@ -39,16 +39,16 @@ public class MemberAddServlet extends HttpServlet {
 
     // <input type="file"...> 입력 값 꺼내기
     Part photoPart = request.getPart("photo");
-    
-    // 회원 사진을 저장할 위치
-    // => context root/upload/파일
+
+    // 회원 사진을 저장할 위치를 알아낸다.
+    // => 컨텍스트루트/upload/파일
     // => 파일을 저장할 때 사용할 파일명을 준비한다.
     String filename = UUID.randomUUID().toString();
-    String saveFilePath = ctx.getRealPath(
-        "/upload" + photoPart.getSubmittedFileName());
+    String saveFilePath = ctx.getRealPath("/upload/" + filename);
+
     // 해당 위치에 업로드된 사진 파일을 저장한다.
     photoPart.write(saveFilePath);
-    
+
     // DB에 사진 파일 이름을 저장하기 위해 객체에 보관한다.
     member.setPhoto(filename);
 
@@ -61,8 +61,10 @@ public class MemberAddServlet extends HttpServlet {
     out.println("<meta http-equiv='Refresh' content='1;url=list'>");
     out.println("<title>회원등록</title></head>");
     out.println("<body>");
+
     try {
       out.println("<h1>회원 등록</h1>");
+
       memberService.add(member);
 
       out.println("<p>회원을 등록하였습니다.</p>");
