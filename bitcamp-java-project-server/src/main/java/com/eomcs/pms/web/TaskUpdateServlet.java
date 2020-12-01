@@ -3,25 +3,27 @@ package com.eomcs.pms.web;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.sql.Date;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.eomcs.pms.service.BoardService;
+import com.eomcs.pms.domain.Member;
+import com.eomcs.pms.domain.Task;
+import com.eomcs.pms.service.TaskService;
 
-@WebServlet("/board/delete")
-public class BoardDeleteServlet extends HttpServlet {
+@WebServlet("/task/update")
+public class TaskUpdateServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     ServletContext ctx = request.getServletContext();
-    BoardService boardService =
-        (BoardService) ctx.getAttribute("boardService");
+    TaskService taskService = (TaskService) ctx.getAttribute("taskService");
 
     response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();
@@ -29,19 +31,28 @@ public class BoardDeleteServlet extends HttpServlet {
     out.println("<!DOCTYPE html>");
     out.println("<html>");
     out.println("<head>");
-    //out.println("<meta http-equiv='Refresh' content='1;url=list'>");
-    out.println("<title>게시글삭제</title></head>");
+    out.println("<title>작업변경</title></head>");
     out.println("<body>");
+
     try {
-      out.println("<h1>게시물 삭제</h1>");
+      out.println("<h1>작업 변경</h1>");
 
-      int no = Integer.parseInt(request.getParameter("no"));
-      if (boardService.delete(no) == 0) {
-        out.println("<p>해당 번호의 게시글이 없습니다.</p>");
+      Task task = new Task();
+      task.setNo(Integer.parseInt(request.getParameter("no")));
+      task.setContent(request.getParameter("content"));
+      task.setDeadline(Date.valueOf(request.getParameter("deadline")));
+      task.setStatus(Integer.parseInt(request.getParameter("status")));
+      task.setOwner(new Member()
+          .setNo(Integer.parseInt(request.getParameter("owner"))));
 
+      if (taskService.update(task) == 0) {
+        out.println("<p>해당 작업이 존재하지 않습니다.</p>");
       } else {
-        out.println("<p>게시글을 삭제하였습니다.</p>");
+        out.println("<p>작업을 변경하였습니다.</p>");
       }
+
+      response.setHeader("Refresh",
+          "1;url=../project/detail?no=" + request.getParameter("projectNo"));
 
     } catch (Exception e) {
       out.println("<h2>작업 처리 중 오류 발생!</h2>");

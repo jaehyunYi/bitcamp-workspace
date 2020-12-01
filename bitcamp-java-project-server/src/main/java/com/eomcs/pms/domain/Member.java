@@ -10,23 +10,9 @@ public class Member {
   private String photo;
   private String tel;
   private Date registeredDate;
-  
-  public Member() {
-  }
+  private int state;
 
-  public Member(int no) {
-    this.no = no;
-  }
-  
-  public Member(String name) {
-    this.name = name;
-  }
-  
-  public Member(int no, String name) {
-    this.no = no;
-    this.name = name;
-  }
-  public int getNo() { 
+  public int getNo() {
     return no;
   }
   public Member setNo(int no) {
@@ -75,4 +61,27 @@ public class Member {
     this.registeredDate = registeredDate;
     return this;
   }
+  public int getState() {
+    return state;
+  }
+  public void setState(int state) {
+    this.state = state;
+  }
+
+  public static void main(String[] args) {
+    //    Member m1 = new Member();
+    //    Member m2 = new Member(100);
+    //    Member m3 = new Member("홍길동");
+    //    Member m4 = new Member(100, "홍길동");
+
+    Member m5 = new Member().setNo(100).setName("홍길동");
+    System.out.println(m5.getNo());
+    System.out.println(m5.getName());
+  }
 }
+
+
+
+
+
+
