@@ -3,13 +3,15 @@ package com.eomcs.web.ex06;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebInitParam;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
 // 서블릿이 사용할 값을 DD 설정으로 지정할 수 있다.
 //
 //@WebServlet(
 //    value = "/ex06/s3",
-//    loadOnStartup = 1,
+//    //loadOnStartup = 1,
 //    initParams = {
 //        @WebInitParam(name = "jdbc.driver", value = "org.mariadb.jdbc.Driver"),
 //        @WebInitParam(name = "jdbc.url", value = "jdbc:mariadb://localhost/studydb"),

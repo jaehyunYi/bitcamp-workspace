@@ -1,6 +1,6 @@
-package com.eomcs.pms.filter;
+package com.eomcs.pms.handler;
 
-import com.eomcs.pms.web.Request;
+import com.eomcs.pms.handler.Request;
 
 // 필터 역할:
 // - 로그인 하지 않은 경우 커맨드를 실행시키지 않는다.
