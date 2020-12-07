@@ -34,7 +34,7 @@ pageContext.setAttribute("list", names);
 
 <%
 for (String n : list) {
-  out.println(n + "<br>");
+  out.println(obj + "<br>");
 }
 %>
 
