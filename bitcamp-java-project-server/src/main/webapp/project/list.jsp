@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>     
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +9,7 @@
 
 <jsp:include page="/header.jsp"></jsp:include>
 
-<h1>프로젝트 목록(JSP + EL + JSTL)</h1>
+<h1>프로젝트 목록(JSP+EL+JSTL)</h1>
 <a href='form'>새 프로젝트</a><br>
 
 <table border='1'>
@@ -31,13 +30,13 @@
   <td><a href='detail?no=${p.no}'>${p.title}</a></td>
   <td>${p.startDate} ~ ${p.endDate}</td>
   <td>${p.owner.name}</td>
-  <td>
+  <td>[
   <c:forEach items="${p.members}" var="m">
-  	<c:if test="${m.state == 1}">
-  ${m.name},
-  </c:if>
+    <c:if test="${m.state == 1}">
+      ${m.name},
+    </c:if>
   </c:forEach>
-  </td>
+  ]</td>
 </tr>
 </c:forEach>
 </tbody>
