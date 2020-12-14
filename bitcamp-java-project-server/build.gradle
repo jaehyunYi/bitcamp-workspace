@@ -9,6 +9,7 @@ repositories {
 }
 
 dependencies {
+<<<<<<< HEAD
     // Thumbnailator 썸네일 생성 라이브러리
     implementation 'net.coobird:thumbnailator:0.4.13'
   
@@ -19,6 +20,22 @@ dependencies {
     implementation 'jstl:jstl:1.2'
 
     // Mybatis 퍼시스턴스 프레임워크
+=======
+
+	//Spring WebMVC 프레임워크
+	implementation 'org.springframework:spring-webmvc:5.3.2'
+		
+	// Thumbnailator 썸네일 생성 라이브러리
+    implementation 'net.coobird:thumbnailator:0.4.13'
+		
+	//servlet-api 라이브러리
+	compile 'javax.servlet:javax.servlet-api:4.0.1'
+	
+	// jstl 라이브러리
+	implementation 'jstl:jstl:1.2'
+		
+	// Mybatis 퍼시스턴스 프레임워크
+>>>>>>> 94bf391f227f6b2e7cdf2de801983a2a97f41c0c
     implementation 'org.mybatis:mybatis:3.5.6'
 
     // MariaDB JDBC 드라이버
