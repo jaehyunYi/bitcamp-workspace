@@ -32,6 +32,9 @@ dependencies {
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.13'
+    
+    // Spring IoC 컨테이너
+    implementation 'org.springframework:spring-context:5.3.2'
 }
 
 application {
