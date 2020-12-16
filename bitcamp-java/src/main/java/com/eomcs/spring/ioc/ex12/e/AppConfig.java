@@ -19,20 +19,13 @@ import com.eomcs.spring.ioc.ex12.Board;
 @MapperScan("com.eomcs.spring.ioc.ex12.e")
 public class AppConfig {
 
-  @Value("${jdbc.driver}")
-  String jdbcDriver;
-
-  @Value("${jdbc.url}")
-  String jdbcUrl;
-
-  @Value("${jdbc.username}")
-  String jdbcUsername;
-
-  @Value("${jdbc.password}")
-  String jdbcPassword;
-
   @Bean
-  public DataSource dataSource() {
+  public DataSource dataSource(
+    @Value("${jdbc.driver}") String jdbcDriver,
+    @Value("${jdbc.url}") String jdbcUrl,
+    @Value("${jdbc.username}")String jdbcUsername,
+    @Value("${jdbc.password}") String jdbcPassword) {
+
     BasicDataSource ds = new BasicDataSource();
     ds.setDriverClassName(jdbcDriver);
     ds.setUrl(jdbcUrl);

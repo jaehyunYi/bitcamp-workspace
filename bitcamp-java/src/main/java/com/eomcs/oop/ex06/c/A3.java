@@ -2,7 +2,7 @@ package com.eomcs.oop.ex06.c;
 
 public class A3 extends A {
   int age;
-  String tel = "A3A3A3" ;
+  String tel = "A3A3A3";
 
   // 상속 받은 메서드가 서브 클래스의 역할에 맞지 않다면
   // 서브 클래스의 역할에 맞춰서 재정의 하라!
@@ -17,8 +17,8 @@ public class A3 extends A {
   //    메서드 시그너처(method signature) = 함수 프로토타입(function prototype)
   //       메서드명, 파라미터 타입/개수, 리턴 타입
   @Override
-void print() {
-    System.out.printf("'%s(%d)'님 반갑습니다!\n", name, age);
+  void print() {
+    System.out.printf("'%s(%d)'님 반갑습니다!\n", this.name, this.age);
   }
 }
 

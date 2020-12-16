@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 public class MyInvocationHandler implements InvocationHandler {
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    System.out.println("호출됨!");
+    System.out.printf("%s호출됨! \n", method.getName());
     return null;
   }
 }

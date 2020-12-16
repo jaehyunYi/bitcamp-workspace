@@ -48,8 +48,7 @@ public class Customer3 {
   public void setWeight(int weight) {
     if (weight < 1 || weight > 200) {
       this.weight = 0;
-      //return;
-      throw new RuntimeException("몸무게가 유효하지 않습니다.");
+      return;
     }
     this.weight = weight;
   }
@@ -69,19 +68,19 @@ public class Customer3 {
   // => 그래서 "겟터(getter)"라 부른다.
 
   public String getName() {
-    return name;
+    return this.name;
   }
 
   public int getAge() {
-    return age;
+    return this.age;
   }
 
   public int getHeight() {
-    return height;
+    return this.height;
   }
 
   public int getWeight() {
-    return weight;
+    return this.weight;
   }
 
 }

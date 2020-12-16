@@ -26,7 +26,7 @@
     where board_id = #{value}
   </select>
   
-  <select id="select2" resultMap="BoardMap" parameterType="int">
+  <select id="select2" resultMap="BoardMap">
     select 
       board_id,
       title, 
@@ -80,9 +80,9 @@
       created_date,
       view_count 
     from x_board
-    where 1=1
+    where
     <if test="no != null">
-      or board_id = #{no}
+      board_id = #{no}
     </if>
     <if test="title != null">
       or title like concat('%', #{title}, '%')
@@ -169,7 +169,7 @@
 	    <when test="item == 'no'">
 	      board_id = #{keyword}
 	    </when>
-	    <when test="item == 'title'">
+	    <when test='item == "title"'>
 	      title like concat('%', #{keyword}, '%')
 	    </when>
 	    <otherwise>
@@ -238,18 +238,17 @@
       created_date,
       view_count 
     from x_board
-    
     <where>
       <foreach collection="noList" item="no">
-      <if test="no != ''">
+        <if test="no != ''">
         or board_id = #{no}
-      </if>
+        </if>
       </foreach>
       <!-- 자바코드:
       ArrayList<Object> list = map.get("noList");
       for (Object no : list) {
-        if(!no.equals("")) {
-          sql += "or board_id = " + no;
+        if (!no.equals("")) {
+          sql += " or board_id = " + no;
         }
       }
        -->
