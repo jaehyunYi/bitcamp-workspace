@@ -2,6 +2,10 @@ package com.eomcs.pms.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.Controller;
+
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.service.BoardService;
@@ -15,7 +19,6 @@ public class BoardAddController implements Controller {
     this.boardService = boardService;
   }
 
-  @Override
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     Board board = new Board();
