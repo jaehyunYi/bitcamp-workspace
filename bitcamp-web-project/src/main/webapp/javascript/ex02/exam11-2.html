@@ -5,6 +5,7 @@
 <title>ex02</title>
 </head>
 <body>
+<<<<<<< HEAD
 <h1>변수 - let 변수와 블록</h1>
 <script>
 "use strict"
@@ -30,6 +31,22 @@ console.log("------------------");
 // let 변수는 로컬 변수이기 때문에 window에 소속되지 않는다. 
 console.log(window.v1); // undefined
 console.log(window.v2); // undefined
+=======
+<h1>변수 - var 변수와 블록</h1>
+<script>
+"use strict"
+
+var v1 = "홍길동";
+
+{
+    // 자바스크립트는 일반 블록에 선언된 var 변수도 글로벌 변수로 간주한다. 
+    var v1 = "임꺽정"; // 이전에 선언된 v1 변수를 덮어 쓴다.
+    var v2 = 100; // 자바스크립트는 일반 블록을 무시한다. 따라서 v2는 글로벌 변수이다.
+}
+
+console.log(window.v1);
+console.log(window.v2);
+>>>>>>> 07a73561b617a92dde776eb35e585bd7a98af3ed
 
 </script>
 </body>
